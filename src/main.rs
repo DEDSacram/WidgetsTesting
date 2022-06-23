@@ -57,13 +57,26 @@ impl eframe::App for MyApp {
             });
          
         });
-
+        egui::SidePanel::left("side_panel").show(ctx, |ui| {
+            ui.label("Encrypt");
+            ui.add_sized([ui.available_size()[0],100.0], egui::TextEdit::multiline(to_encrypt));
+            ui.label("Encrypted");
+            ui.add_sized([ui.available_size()[0],100.0], egui::TextEdit::multiline(encrypted));
+            if ui.button("Start").clicked(){
+                println!("Encrypting");
+            }
+        });
         egui::CentralPanel::default().show(ctx, |ui|{
-            ui.add(Spinner::new().size(200.0));
+            // ui.add(Spinner::new().size(200.0));
             ui.with_layout(egui::Layout::from_main_dir_and_cross_align(
                 egui::Direction::LeftToRight,
-                egui::Align::Center), |ui| {
-                ui.add(Alphabet::new());
+                egui::Align::TOP), |ui| {
+                ui.spacing_mut().item_spacing.x = 0.0;
+                let currsize = ui.available_size();
+                println!("Before {:?} After {:?}",ui.available_size(),ui.available_size_before_wrap());
+                for n in 'A'..='Z'{
+                    ui.add(LColumn::new().letter(n).recsize(currsize.x/26.0));
+                }
                 // ui.add(LColumn::new());
                 // ui.add(LColumn::new());
                 

@@ -1,11 +1,23 @@
+use egui::Align2;
+use egui::FontId;
+use egui::Stroke;
+use egui::Color32;
+use egui::vec2;
+use egui::Sense;
+use egui::Response;
+use egui::Ui;
+use egui::Widget;
+
 pub struct LColumn {
-    letter: char
+    letter: char,
+    size : f32,
 }
 
 impl Default for LColumn {
     fn default() -> Self {
         Self {
             letter: 'X',
+            size: 20.0,
         }
     }
 }
@@ -20,6 +32,10 @@ impl LColumn {
         self.letter = letter;
         self
     }
+    pub fn recsize(mut self, size : f32) -> Self{
+        self.size = size;
+        self
+    }
 
  
 }
@@ -28,21 +44,23 @@ impl Widget for LColumn {
     fn ui(self, ui: &mut Ui) -> Response {
         let LColumn {
             letter,
+            size,
         } = self;
 
         // let available_space = ui.available_size_before_wrap();
-        let available_space = ui.max_rect().size();
+        // let available_space = ui.max_rect().size();
       
-        println!("{:?}",ui.max_rect().size().x);
+        // println!("{:?}",ui.max_rect().size().x);
 
         
         // let size = vec2(available_space.x/20.0, available_space.x/20.0);
-        let size = (available_space.x-6.0*27.0-6.0*2.0)/27.0;
-        let (rect, response) = ui.allocate_at_least(vec2(size,size), Sense::hover());
+        // let size = (available_space.x-6.0*27.0-6.0*2.0)/27.0;
+        let (rect, response) = ui.allocate_exact_size(vec2(size,size), Sense::hover());
         // let x: f32 = available_space.x/20.0;
         // let y: f32 = available_space.x/20.0;
         // let x2: f32 = &x+20.0;
         // let y2: f32 = &y+20.0;
+        println!("Rect {:?}",rect.center());
         let corner_radius : f32 = 1.0;
         let stroke_width : f32 = 1.5;
         let stroke = Stroke::new( stroke_width, Color32::DARK_GRAY);
