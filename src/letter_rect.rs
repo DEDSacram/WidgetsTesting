@@ -1,3 +1,4 @@
+use egui::Vec2;
 use egui::Align2;
 use egui::FontId;
 use egui::Stroke;
@@ -11,21 +12,10 @@ use egui::Ui;
 use egui::Widget;
 
 
-/// A visual LColumn. A horizontal or vertical line (depending on [`Layout`]).
-///
-/// Usually you'd use the shorter version [`Ui::LColumn`].
-///
-/// ```
-/// # egui::__run_test_ui(|ui| {
-/// // These are equivalent:
-/// ui.LColumn();
-/// ui.add(egui::LColumn::default());
-/// # });
-/// ```
 #[must_use = "You should put this widget in an ui with `ui.add(widget);`"]
 
 pub struct Alphabet {
-    letters : Vec<LColumn>
+    letters : Vec<char>
 }
 impl Default for Alphabet {
     fn default() -> Self {
@@ -50,25 +40,29 @@ impl Widget for Alphabet{
 
         let boxsize = available_space.x/26.0;
         for n in 'A'..='Z' {
-            letters.push(LColumn::new().letter(n).rectsize(boxsize));
+            letters.push(n);
         }
-   
         let (rect, response) = ui.allocate_at_least(vec2(available_space.x,boxsize), Sense::hover());
+        let mut boxspace = (rect.size().x-(rect.size().x/26.0)/2.0)/26.0; 
+        let corner_radius : f32 = 1.0;
+        let stroke_width : f32 = 1.5;
+        let stroke = Stroke::new( stroke_width, Color32::DARK_GRAY);
         if ui.is_rect_visible(response.rect) {
-         
+            let mut i = boxspace;
+            for elem in letters {
+            ui.painter().rect(Rect::from_center_size(Pos2::from((i,rect.size().y)), vec2(boxspace/2.0,boxspace/2.0)), corner_radius, Color32::TRANSPARENT, stroke);
+            ui.painter().text(Pos2::from((i,rect.size().y)), Align2::CENTER_CENTER, elem, FontId::proportional(boxsize/2.0), Color32::BLACK);
+            i += boxspace;
+            }
         }
-        for elem in letters {
-            ui.add(elem);
-        }
+
+
+
+
 
         response
     }
 }
-
-
-
-
-
 
 pub struct LColumn {
     size : f32,
@@ -99,6 +93,10 @@ impl LColumn {
         self.size = size;
         self
 
+    }
+
+    pub fn showletter(&self) -> char{
+        return self.letter;
     }
 
  

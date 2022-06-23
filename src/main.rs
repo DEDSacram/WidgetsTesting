@@ -1,8 +1,8 @@
 
 mod spin;
-mod letter_rect;
+mod letter;
 use spin::Spinner;
-use letter_rect::Alphabet;
+use letter::LColumn;
 use egui::Direction;
 
 fn main() {
